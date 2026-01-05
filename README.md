@@ -1,70 +1,217 @@
-# Getting Started with Create React App
+# California Housing Price Predictor
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Machine learning dashboard for predicting California housing prices using economic indicators.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Predict housing prices with 5 economic factors
+- Interactive price trends chart with hover tooltips
+- Regional analysis across California counties
+- Feature importance visualization
+- Real-time prediction with input validation
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Frontend:** React 19, JavaScript  
+**Backend:** Flask 3.1, Python 3.13  
+**ML Model:** Linear Regression (R² = 0.9521)  
+**Data Processing:** Pandas, DuckDB
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Model Details
 
-### `npm test`
+**Inputs:**
+- California Population
+- Total Consumer Debt (trillion $)
+- Total Housing Units
+- Average Property Tax
+- Previous Year Median Price
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Output:** Predicted median housing price
 
-### `npm run build`
+## Quick Start
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
+- Python 3.13+
+- Node.js 16+
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Clone and install dependencies**:
+```bash
+cd predict-housing-dash
+pip install -r requirements.txt  # If you have one
+npm install
+```
 
-### `npm run eject`
+2. **Activate virtual environment**:
+```bash
+.venv\Scripts\activate
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. **Clone and install dependencies:**
+```bash
+pip install -r requirements.txt
+npm install
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. **Start backend:**
+```bash
+python app.py
+```
+Runs on http://localhost:5000
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. **Start frontend (new terminal):**
+```bash
+npm start
+```
+Runs on http://localhost:3001
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## API Endpoints
 
-## Learn More
+- `POST /predict` - Get price prediction
+- `GET /stats` - Dashboard statistics
+- `GET /latest` - Latest data for form
+- `GET /history` - Historical price data
+- `GET /feature-importance` - Model feature weights
+- `GET /regional-analysis` - Regional median prices
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Project Structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+predict-housing-dash/
+├── app.py                    # Flask API
+├── src/
+│   ├── App.js               # Main React app
+│   ├── assets/
+│   │   ├── components/      # React components
+│   │   └── data/           # CSV datasets
+│   └── *.pkl               # ML model files
+└── README.md
+```
 
-### Code Splitting
+## Dashboard Sections
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- **Dashboard** - Overview with stats and predictions
+- **Predictions** - Make new predictions
+- **Analytics** - Historical trends analysis
+- **Models** - Model comparison and metrics
+- **Regions** - Regional price comparison
+- **Features** - Feature importance analysis
+- **History** - Complete historical data view
 
-### Analyzing the Bundle Size
+## Data
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Historical California housing data (2003-2025) including population, consumer debt, housing units, property tax, and median prices.
+│   ├── MLP.ipynb          # Model training notebook
+│   ├── App.js             # React main component
+│   ├── final_linear_model.pkl
+│   ├── scaler_X.pkl
+│   ├── scaler_y.pkl
+│   ├── feature_names.pkl
+│   ├── feature_importance.pkl
+│   ├── assets/
+│   │   ├── components/    # React components
+│   │   └── data/          # CSV datasets
+├── public/                # Static files
+└── package.json
+```
 
-### Making a Progressive Web App
+## 🔬 Model Training
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+The model is trained in `src/MLP.ipynb`:
 
-### Advanced Configuration
+1. **Data Loading**: CSV files → DuckDB tables
+2. **Data Merging**: Join population, debt, housing, tax data
+3. **Feature Engineering**: Create CA_lag1 (previous year price)
+4. **Model Training**: Linear Regression with StandardScaler
+5. **Feature Selection**: Remove multicollinear features
+6. **Permutation Importance**: Calculate true feature importance
+7. **Model Export**: Save as pickle files
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Key Improvements
+- **Removed multicollinearity**: Dropped individual debt components (mortgage, auto, credit card) that were included in total_debt
+- **Permutation importance**: More accurate than coefficient-based importance
+- **Simplified features**: Only 5 intuitive inputs
 
-### Deployment
+## 📈 Results
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **Model R²**: 0.95+
+- **Most Important Features** (by permutation):
+  1. CA_lag1 (previous year price)
+  2. Total Debt
+  3. Population
+  4. Total Housing Units
+  5. Average Property Tax
 
-### `npm run build` fails to minify
+## 🎨 Dashboard Features
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Stats Cards
+- Average Price
+- Predictions Today
+- Model Accuracy
+- Total Data Records
+
+### Charts
+1. **Price Trends**: Historical data summary
+2. **Feature Importance**: Top 5 features with permutation scores
+3. **Regional Analysis**: Top regions by median price
+
+### Prediction Form
+- Auto-filled with latest California data
+- 5 required fields
+- Real-time validation
+- Instant predictions
+
+## 🛠️ Technologies Used
+
+**Frontend**:
+- React 19
+- CSS3
+- Fetch API
+
+**Backend**:
+- Flask 3.1
+- Flask-CORS
+- Pandas
+- NumPy
+- scikit-learn
+
+**Data**:
+- DuckDB
+- CSV files
+
+**ML**:
+- Linear Regression
+- StandardScaler
+- Permutation Importance
+
+## 📝 Development Notes
+
+### Why Linear Regression?
+- High R² score (0.95+)
+- Fast predictions
+- Interpretable results
+- No overfitting
+
+### Why These 5 Features?
+- Removed multicollinearity (total_debt already includes individual debts)
+- All features are readily available economic indicators
+- Strong predictive power
+- Easy to understand and input
+
+## 🔮 Future Enhancements
+
+- Add time-series forecasting
+- Interactive charts with Plotly/Chart.js
+- User authentication
+- Save prediction history
+- Export reports as PDF
+- Mobile responsive improvements
+
+## 📄 License
+
+This project is for educational purposes.
+
+## 👤 Author
+
+Created as a machine learning and full-stack development project.

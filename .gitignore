@@ -4,6 +4,12 @@
 /node_modules
 /.pnp
 .pnp.js
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
 
 # testing
 /coverage
@@ -21,3 +27,23 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# data files
+/src/data/
+/src/assets/data/
+**/data/
+*.csv
+*.json
+*.xlsx
+*.xls
+*.parquet
+*.feather
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.db
+*.sqlite
+*.sqlite3
+*.duckdb
+*.duckdb.wal
