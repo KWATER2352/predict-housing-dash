@@ -1,4 +1,4 @@
-# California Housing Price Predictor
+# Full-Stack California Housing Price Predictor
 
 Machine learning dashboard for predicting California housing prices using economic indicators.
 
